@@ -86,38 +86,18 @@ public class Ocean implements OceanInterface {
 			submarines[i] = new Submarine();
 			attemptPlacement(submarines[i]);
 		}
-
 	}
 
-	public boolean attemptPlacement(Ship ship) {
+	private boolean attemptPlacement(Ship ship) {
 		boolean successfullyPlaced = false;
 		while (!successfullyPlaced) {
 			int[] coordinates = generateRandomPlacement();
-			successfullyPlaced = placeShip(ship, coordinates);
+			if (ship.okToPlaceShipAt(coordinates[0], coordinates[1], coordinates[2] == 0, this)) {
+				ship.placeShipAt(coordinates[0], coordinates[1], coordinates[2] == 0, this);
+				successfullyPlaced = true;
+			}
 		}
 		return true;
-	}
-
-	public boolean placeShip(Ship ship, int[] coordinates) {
-		int length = ship.getLength();
-
-		if (shipFits(length, coordinates)) {
-			// set bow coordinates
-			ship.setBowLocation(coordinates[0], coordinates[1]);
-			// place the ship in the ocean
-			if (coordinates[2] == 0) { // if horizontal
-				for (int i = coordinates[0]; i < coordinates[0] + length; i++) {
-					ships[i][coordinates[1]] = ship;
-				}
-			} else { // if vertical
-				for (int i = coordinates[1]; i < coordinates[1] + length; i++) {
-					ships[coordinates[0]][i] = ship;
-				}
-			}
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	private int[] generateRandomPlacement() {
@@ -189,12 +169,12 @@ public class Ocean implements OceanInterface {
 	 *         {@literal false} otherwise.
 	 */
 	public boolean isOccupied(int row, int column) {
-		boolean occupied = (ships[row][column] instanceof EmptySea) ? false : true;
+		boolean occupied = (ships[row][column].getShipType().equals("empty")) ? false : true;
 		return occupied;
 	}
 
 	/**
-	 * Fires a shot at this coordinate. This will update the number of shots that
+	 * Fires a shot at this coordinate. This will up date the number of shots that
 	 * have been fired (and potentially the number of hits, as well). If a location
 	 * contains a real, not sunk ship, this method should return {@literal true}
 	 * every time the user shoots at that location. If the ship has been sunk,
@@ -208,29 +188,18 @@ public class Ocean implements OceanInterface {
 	public boolean shootAt(int row, int column) {
 		shotsFired++;
 		Ship shipShot = ships[row][column];
-		if (!(shipShot instanceof EmptySea)) {
-			if (!shipShot.isSunk()) {
-				// HIT COUNT ++ EVEN WHEN THE SHIP IS SUNK?
-				hitCount++;
-				// calculate which tile (from the bow) was hit
-				int[] bowLocation = shipShot.getBowLocation();
-				int tileShot = (row - bowLocation[0]) + (column - bowLocation[1]);
-
-				if (!shipShot.isTileHit(tileShot)) {
-					shipShot.updateHits(tileShot);
-					if (shipShot.isSunk()) {
-						System.out.println("You just sunk a " + shipShot.getShipType());
-					}
-				}
-				return true;
-			} else {
-				return false;
+		boolean hitInflicted = shipShot.shootAt(row, column);
+		if (hitInflicted) {
+			hitCount++;
+			System.out.println("hit");
+			if (shipShot.isSunk()) {
+				shipsSunk++;
 			}
+			return true;
 		} else {
-			shipShot.emptyShot();
+			System.out.println("miss");
 			return false;
 		}
-
 	}
 
 	/**
@@ -313,28 +282,18 @@ public class Ocean implements OceanInterface {
 		for (int i = 0; i < 10; i++) {
 			System.out.print(i + " ");
 			for (int j = 0; j < 10; j++) {
-				if (!(ships[i][j] instanceof EmptySea)) {
-					int[] bowLocation = ships[i][j].getBowLocation();
-					int tile = (i - bowLocation[0]) + (j - bowLocation[1]);
-					if (ships[i][j].isTileHit(tile)) {
-						if (ships[i][j].isSunk()) {
-							System.out.print('x');
-						} else {
-							System.out.print('S');
-						}
+				if (ships[i][j].toString().equals("S")) {
+					int tileShot = (i - ships[i][j].getBowRow()) + (j - ships[i][j].getBowColumn());
+					if (ships[i][j].tileBeenHit(tileShot)) {
+						System.out.print("S");
 					} else {
-						System.out.print(". ");
+						System.out.print(".");
 					}
-
 				} else {
-					if (ships[i][j].beenShotAt()) {
-						System.out.print("- ");
-					} else {
-						System.out.print(". ");
-					}
+					System.out.print(ships[i][j].toString());
 				}
+				System.out.print(" ");
 			}
-
 			System.out.println();
 		}
 	}

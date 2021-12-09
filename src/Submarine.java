@@ -2,11 +2,14 @@
 public class Submarine extends Ship {
 	public Submarine() {
 		length = 1;
-		tilesHit = new boolean[length];
+		hit = new boolean[length];
+		for (int i = 0; i < length; i++) {
+			hit[i] = false;
+		}
 	}
 
 	@Override
 	public String getShipType() {
-		return "submarine";
+		return "Submarine";
 	}
 }

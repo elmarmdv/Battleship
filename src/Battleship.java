@@ -2,11 +2,14 @@
 public class Battleship extends Ship {
 	public Battleship() {
 		length = 4;
-		tilesHit = new boolean[length];
+		hit = new boolean[length];
+		for (int i = 0; i < length; i++) {
+			hit[i] = false;
+		}
 	}
 
 	@Override
 	public String getShipType() {
-		return "battleship";
+		return "Battleship";
 	}
 }
