@@ -52,12 +52,6 @@ public abstract class Ship {
 				int upperBound = (column == 0) ? column : column - 1;
 				int lowerBound = (column + length - 1 == 9) ? column + length - 1 : column + length;
 
-				System.out.println("Horizontal");
-				System.out.println("leftBound: " + leftBound);
-				System.out.println("rightBound: " + rightBound);
-				System.out.println("upperBound: " + upperBound);
-				System.out.println("lowerBound: " + lowerBound);
-
 				for (int i = leftBound; i <= rightBound; i++) {
 					for (int j = upperBound; j <= lowerBound; j++) {
 						if (!(ocean.ships[i][j].getShipType().equals("empty"))) {
@@ -77,12 +71,6 @@ public abstract class Ship {
 				int rightBound = (row + length - 1 == 9) ? row + length - 1 : row + length;
 				int upperBound = (column == 0) ? column : column - 1;
 				int lowerBound = (column == 9) ? column : column + 1;
-
-				System.out.println("Vertical");
-				System.out.println("leftBound: " + leftBound);
-				System.out.println("rightBound: " + rightBound);
-				System.out.println("upperBound: " + upperBound);
-				System.out.println("lowerBound: " + lowerBound);
 
 				for (int i = leftBound; i <= rightBound; i++) {
 					for (int j = upperBound; j <= lowerBound; j++) {
@@ -117,10 +105,8 @@ public abstract class Ship {
 		int tileShot = (row - bowRow) + (column - bowColumn);
 		if (!this.isSunk()) {
 			if (!this.hit[tileShot]) {
+
 				this.hit[tileShot] = true;
-				if (this.isSunk()) {
-					System.out.println("You just sunk a " + this.getShipType());
-				}
 			}
 			return true;
 		} else {

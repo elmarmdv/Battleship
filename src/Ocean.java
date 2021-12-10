@@ -146,6 +146,7 @@ public class Ocean implements OceanInterface {
 			System.out.println("hit");
 			if (shipShot.isSunk()) {
 				shipsSunk++;
+				System.out.println("You just sunk a " + shipShot.getShipType());
 			}
 			return true;
 		} else {
@@ -165,7 +166,7 @@ public class Ocean implements OceanInterface {
 	 * @return the number of hits recorded in this game.
 	 */
 	public int getHitCount() {
-		return this.shotsFired;
+		return this.hitCount;
 	}
 
 	/**
