@@ -105,7 +105,6 @@ public abstract class Ship {
 			for (int i = column; i <= column + length - 1; i++) {
 				ocean.ships[row][i] = this;
 			}
-
 		} else { // if vertical
 			for (int i = row; i <= row + length - 1; i++) {
 				ocean.ships[i][column] = this;
@@ -123,7 +122,6 @@ public abstract class Ship {
 					System.out.println("You just sunk a " + this.getShipType());
 				}
 			}
-			// DOUBLE CHECK THAT THIS SHOULD RETURN TRUE EVEN IF TILE BEEN SHOT BEFORE
 			return true;
 		} else {
 			return false;

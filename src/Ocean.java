@@ -111,54 +111,6 @@ public class Ocean implements OceanInterface {
 		return randomValues;
 	}
 
-	public boolean shipFits(int shipLength, int[] coordinates) {
-		int x = coordinates[0];
-		int y = coordinates[1];
-		String orientation = (coordinates[2] == 0) ? "horizontal" : "vertical";
-
-		// if horizontal
-		if (orientation.equals("horizontal")) {
-			if (10 - x < shipLength) {
-				// BAD
-				return false;
-			} else {
-				// see if the perimeter where we want to place a ship is vacant
-				int leftBound = (x == 0) ? x : x - 1;
-				int rightBound = (x + shipLength - 1 == 9) ? x + shipLength - 1 : x + shipLength;
-				int upperBound = (y == 0) ? y : y - 1;
-				int lowerBound = (y == 9) ? y : y + 1;
-
-				for (int i = leftBound; i <= rightBound; i++) {
-					for (int j = upperBound; j <= lowerBound; j++) {
-						if (!(ships[i][j] instanceof EmptySea)) {
-							return false;
-						}
-					}
-				}
-			}
-			// if vertical
-		} else {
-			if (10 - y < shipLength) {
-				return false;
-			} else {
-				// see if the perimeter where we want to place a ship is vacant
-				int leftBound = (x == 0) ? x : x - 1;
-				int rightBound = (x == 9) ? x : x + 1;
-				int upperBound = (y == 0) ? y : y - 1;
-				int lowerBound = (y + shipLength - 1 == 9) ? y + shipLength - 1 : y + shipLength;
-
-				for (int i = leftBound; i <= rightBound; i++) {
-					for (int j = upperBound; j <= lowerBound; j++) {
-						if (!(ships[i][j] instanceof EmptySea)) {
-							return false;
-						}
-					}
-				}
-			}
-		}
-		return true;
-	}
-
 	/**
 	 * Checks if this coordinate is not empty; that is, if this coordinate does not
 	 * contain an EmptySea reference.
@@ -273,6 +225,9 @@ public class Ocean implements OceanInterface {
 	 * 
 	 */
 	public void print() {
+
+		printSolution();
+
 		System.out.print("  ");
 		for (int i = 0; i < 10; i++) {
 			System.out.print(i + " ");
@@ -296,6 +251,24 @@ public class Ocean implements OceanInterface {
 			}
 			System.out.println();
 		}
+	}
+
+	public void printSolution() {
+		System.out.print("  ");
+		for (int i = 0; i < 10; i++) {
+			System.out.print(i + " ");
+		}
+		System.out.println();
+
+		for (int i = 0; i < 10; i++) {
+			System.out.print(i + " ");
+			for (int j = 0; j < 10; j++) {
+				System.out.print(ships[i][j].toString());
+				System.out.print(" ");
+			}
+			System.out.println();
+		}
+		System.out.println();
 	}
 
 }
